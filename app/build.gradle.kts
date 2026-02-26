@@ -36,6 +36,11 @@ android {
 }
 
 dependencies {
+    implementation(libs.oliviermarteaux.compose)
+    implementation(libs.oliviermarteaux.core)
+    implementation(libs.oliviermarteaux.test)
+    implementation(libs.androidx.material.icons.extended)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
