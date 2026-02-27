@@ -1,7 +1,5 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui
 
-import android.R.attr.x
-import android.service.autofill.Validators.or
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -21,15 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.oliviermarteaux.a056_bricksbreaker.domain.Brick
 import kotlinx.coroutines.isActive
-import com.oliviermarteaux.shared.composables.SharedScaffold
-
-
-enum class GameUiState {
-    STARTING, PLAYING, WIN, GAMEOVER
-}
-
-data class Brick(val row: Int, val col: Int)
 
 @Composable
 fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {

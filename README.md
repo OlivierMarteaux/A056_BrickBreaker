@@ -1,3 +1,14 @@
+<div style="margin-left:0px; transform: scale(1.0); transform-origin: left;">
+  <a href="https://oliviermarteaux.dev">
+    <img
+      src="public/readme_banner.jpg"
+      alt="oliviermarteaux.dev"
+    />
+  </a>
+</div>
+
+<br>
+
 # 🧱 BrickBreaker – Jetpack Compose Arcade Game
 
 A modern implementation of the classic **Brick Breaker** arcade game built entirely with **Jetpack Compose Canvas**.

@@ -1,9 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.googleservices)
+    alias(libs.plugins.crashlytics) // firebase crashlytics
 }
 
+
 android {
+
     namespace = "com.oliviermarteaux.a056_bricksbreaker"
     compileSdk = 36
 
@@ -32,10 +38,27 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
+    //_ hilt for DI
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    //_ Firebase
+    implementation(platform(libs.firebase.bom)) // Bom
+    implementation(libs.firebase.analytics)  // Google Analytics
+    implementation(libs.firebase.crashlytics.ndk)  // Crashlytics
+    implementation(libs.firebase.auth) // Authentication
+    implementation(libs.firebase.firestore) // Database
+    implementation(libs.firebase.storage) // Media files storage
+    // For Google account authentication
+    implementation(libs.play.services.credentials)
+    implementation(libs.androidx.credentials)
+    implementation(libs.googleid)
+
     implementation(libs.oliviermarteaux.compose)
     implementation(libs.oliviermarteaux.core)
     implementation(libs.oliviermarteaux.test)
@@ -50,8 +73,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     
-    implementation("androidx.navigation:navigation-compose:2.8.5")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

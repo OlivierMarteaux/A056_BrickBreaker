@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "65865545206",
+    "project_id": "a056-bricksbreaker",
+    "storage_bucket": "a056-bricksbreaker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65865545206:android:e6ea97ea557904279743d7",
+        "android_client_info": {
+          "package_name": "com.oliviermarteaux.a056_bricksbreaker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq0Okbw0piGTDaLcu4jeNpBK-A8wFonkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
