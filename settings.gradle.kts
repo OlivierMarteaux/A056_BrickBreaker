@@ -19,8 +19,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        // Add Jitpack repository for personal shared library
+        maven{ url = uri("https://jitpack.io") }
     }
 }
+
 
 rootProject.name = "A056_BricksBreaker"
 include(":app")
