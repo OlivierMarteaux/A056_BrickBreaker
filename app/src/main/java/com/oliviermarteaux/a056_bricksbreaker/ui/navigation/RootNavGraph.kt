@@ -10,9 +10,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.oliviermarteaux.a056_bricksbreaker.R
+import com.oliviermarteaux.a056_bricksbreaker.ui.GameScreen
 import com.oliviermarteaux.a056_bricksbreaker.ui.GameViewModel
 import com.oliviermarteaux.a056_bricksbreaker.ui.HomeScreen
-import com.oliviermarteaux.a056_bricksbreaker.ui.GameScreen
 import com.oliviermarteaux.a056_bricksbreaker.ui.ScoreScreen
 import com.oliviermarteaux.shared.navigation.SharedNavGraph
 import com.oliviermarteaux.shared.navigation.authNavGraph

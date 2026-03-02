@@ -1,5 +1,6 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui
 
+import android.R.attr.onClick
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -11,6 +12,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
+import com.oliviermarteaux.shared.firebase.authentication.ui.AuthUserViewModel
+import com.oliviermarteaux.shared.firebase.authentication.ui.UserAuthState
 
 @Composable
 fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
@@ -39,6 +43,33 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
         Text("Selected Speed: ${gameViewModel.speed.toInt()}", fontSize = 18.sp)
         
         Spacer(modifier = Modifier.height(48.dp))
+
+
+//        gameViewModel.checkUserState(
+//            onUserLogged = {
+//                SharedOutlinedTextField(
+//                    value = it.pseudo,
+//                    onValueChange = { newPseudo ->
+//                        gameViewModel.updateUser(it.copy(pseudo = newPseudo))
+//                    },
+//                    label = { Text("Pseudo") },
+//                )
+//            },
+//            onNoUserLogged = {
+//            }
+//        )
+        gameViewModel.user?.let{
+            SharedOutlinedTextField(
+                value = it.pseudo,
+                onValueChange = { newPseudo ->
+                    gameViewModel.updatePseudo(newPseudo)
+                },
+                label = "Pseudo",
+                isError = it.pseudo.isBlank(),
+                errorText = "Pseudo cannot be empty"
+            )
+        }
+
         
         Button(
             onClick = { navController.navigate("game") },
@@ -50,7 +81,7 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
         
         Button(
-            onClick = { navController.navigate("scores") },
+            onClick = { navController.navigate("score") },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
             Text("Scores")

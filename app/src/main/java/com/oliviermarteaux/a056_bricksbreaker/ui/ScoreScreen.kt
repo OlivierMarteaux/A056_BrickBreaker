@@ -17,7 +17,7 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
-    val scores = gameViewModel.getAllScores()
+    val scores = gameViewModel.userList.sortedByDescending { it.score }
     
     Scaffold(
         topBar = {
