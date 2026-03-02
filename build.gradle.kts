@@ -2,4 +2,7 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.compose) apply false
+    // for Hilt DI
+    alias(libs.plugins.hilt) apply false
+    alias(libs.plugins.ksp) apply false
 }
