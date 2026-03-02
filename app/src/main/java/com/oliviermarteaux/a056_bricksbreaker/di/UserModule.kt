@@ -1,7 +1,7 @@
 package com.oliviermarteaux.a056_bricksbreaker.di
 
 import android.app.Application
-import com.oliviermarteaux.a056_bricksbreaker.BrickBreakerApplication
+import com.oliviermarteaux.a056_bricksbreaker.BricksBreakerApplication
 import com.oliviermarteaux.shared.firebase.authentication.data.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -23,7 +23,7 @@ class UserModule {
     fun provideUserRepository(
         application: Application
     ): UserRepository {
-        val app = application as BrickBreakerApplication
+        val app = application as BricksBreakerApplication
         return app.bricksBreakerContainer.userRepository
     }
 }

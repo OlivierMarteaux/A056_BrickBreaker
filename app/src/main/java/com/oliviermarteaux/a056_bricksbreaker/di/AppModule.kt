@@ -1,5 +1,7 @@
 package com.oliviermarteaux.a056_bricksbreaker.di
 
+import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import com.oliviermarteaux.shared.utils.AndroidLogger
 import com.oliviermarteaux.shared.utils.CoroutineDispatcherProvider
@@ -11,6 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
+import java.util.prefs.Preferences
 import javax.inject.Singleton
 
 /**

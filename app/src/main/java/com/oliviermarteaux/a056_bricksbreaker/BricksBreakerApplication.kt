@@ -6,7 +6,6 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.oliviermarteaux.a056_bricksbreaker.di.BricksBreakerAppContainer
 import com.oliviermarteaux.a056_bricksbreaker.di.BricksBreakerContainer
-import com.oliviermarteaux.shared.firebase.messaging.subscribeToFcmNotificationTopic
 import dagger.hilt.android.HiltAndroidApp
 
 /**

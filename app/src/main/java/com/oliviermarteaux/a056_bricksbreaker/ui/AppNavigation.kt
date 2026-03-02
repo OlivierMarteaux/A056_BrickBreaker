@@ -1,6 +1,7 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,7 +11,7 @@ import com.oliviermarteaux.a056_bricksbreaker.data.UserRepository
 @Composable
 fun AppNavigation(
     userRepository: UserRepository = UserRepository(),
-    gameViewModel: GameViewModel = viewModel(factory = GameViewModelFactory(userRepository))
+    gameViewModel: GameViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     

@@ -9,12 +9,16 @@ import com.oliviermarteaux.a056_bricksbreaker.domain.User
 import com.oliviermarteaux.shared.firebase.authentication.data.repository.UserRepository
 import com.oliviermarteaux.shared.firebase.authentication.ui.AuthUserViewModel
 import com.oliviermarteaux.shared.utils.Logger
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GameViewModel(
+@HiltViewModel
+class GameViewModel @Inject constructor(
     private val userRepository: UserRepository,
     isOnlineFlow: Flow<Boolean>,
     log: Logger
@@ -54,10 +58,11 @@ class GameViewModel(
     }
 
     fun updateScore() {
-        userRepository.updateScore(timeElapsed)
+        //userRepository.updateScore(timeElapsed)
     }
 
     fun getAllScores(): List<User> {
-        return userRepository.getAllScores()
+        return emptyList()
+        //return userRepository.getAllScores()
     }
 }

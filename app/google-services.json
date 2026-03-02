@@ -12,7 +12,20 @@
           "package_name": "com.oliviermarteaux.a056_bricksbreaker"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "65865545206-gm3sptu3bjnd1rbvdupaasp17fv0fqeo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oliviermarteaux.a056_bricksbreaker",
+            "certificate_hash": "0deec09ea80b41302017c82189cd483b02894b8f"
+          }
+        },
+        {
+          "client_id": "65865545206-kt0j591mm6lq5e7aijh3h22v896ug9ea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAq0Okbw0piGTDaLcu4jeNpBK-A8wFonkI"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65865545206-kt0j591mm6lq5e7aijh3h22v896ug9ea.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
