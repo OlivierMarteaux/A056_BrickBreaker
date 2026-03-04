@@ -30,17 +30,16 @@ class GameViewModel @Inject constructor(
 ) {
     var speed by mutableFloatStateOf(5f)
         private set
-
     var timeElapsed by mutableLongStateOf(0L)
         private set
-
-    var user: User? by mutableStateOf(null)
+    var pseudo: String by mutableStateOf("")
         private set
-
-    var userUiState: UiState<User> by mutableStateOf(UiState.Loading)
-
     private var isTimerRunning = false
     private var timerJob: Job? = null
+
+    fun onPseudoChange(newPseudo: String) {
+        pseudo = newPseudo
+    }
 
     fun updateSpeed(newSpeed: Float) {
         speed = newSpeed
@@ -63,56 +62,78 @@ class GameViewModel @Inject constructor(
         timerJob?.cancel()
     }
 
-    fun updatePseudo(pseudo: String){
-        user = user?.copy(pseudo = pseudo)
+    fun updatePseudo(){
+        checkUserState(
+            onUserLogged = {
+                viewModelScope.launch {
+                    userRepository.updateUser(currentUser?.copy(pseudo = pseudo)?: User())
+                }
+            },
+            onNoUserLogged = {  }
+        )
     }
 
     fun updateScore() {
-            //userRepository.updateScore(timeElapsed)
-            checkUserState(
-                onUserLogged = {
-                    viewModelScope.launch {
-                        userRepository.updateUser(it.copy(score = timeElapsed))
-                    }
-                },
-                onNoUserLogged = {  }
-            )
-        }
-
-    var userList: List<User> by mutableStateOf(emptyList())
-
-    fun getAllScores() {
-        viewModelScope.launch {
-            userRepository.getAllUsers().collect { result ->
-                result.fold(
-                    onSuccess = { userList = it } ,
-                    onFailure = {}
-                )
-            }
-        }
-    }
-
-    private fun getCurrentUser(){
-        viewModelScope.launch {
-//            delay(1500) // for test
-            userRepository.userAuthState
-                .collect { currentUser ->
-                    if (currentUser != null) {
-                        userUiState = UiState.Success(currentUser)
-                        user = currentUser
-                        log.d("AccountViewModel: user updated to ${currentUser.email}")
-                        log.d("AccountViewModel: userPhotoUrl = ${currentUser.photoUrl}")
-                    } else {
-                        userUiState = UiState.Error(Throwable("No user logged in"))
-                        log.d("AccountViewModel: no user logged in")
-                        log.d("AccountViewModel: userPhotoUrl = ${user?.photoUrl}")
-                    }
+        checkUserState(
+            onUserLogged = {
+                viewModelScope.launch {
+                    userRepository.updateUser(currentUser?.copy(score = timeElapsed)?: User())
                 }
-        }
+            },
+            onNoUserLogged = {  }
+        )
     }
 
+//    var currentUser: User by mutableStateOf(User())
+//        private set
+//
+//    var userUiState: UiState<User> by mutableStateOf(UiState.Loading)
+
+//    private fun getCurrentUser(){
+//        viewModelScope.launch {
+////            delay(1500) // for test
+//            userRepository.userAuthState
+//                .collect { currentUser ->
+//                    if (currentUser != null) {
+//                        userUiState = UiState.Success(currentUser)
+//                        this@GameViewModel.currentUser = currentUser
+//                        log.d("AccountViewModel: user updated to ${currentUser.email}")
+//                        log.d("AccountViewModel: userPhotoUrl = ${currentUser.photoUrl}")
+//                    } else {
+//                        userUiState = UiState.Error(Throwable("No user logged in"))
+//                        log.d("AccountViewModel: no user logged in")
+//                    }
+//                }
+//        }
+//    }
+
+//    var userList: List<User> by mutableStateOf(emptyList())
+
+//    fun getUser() {
+//        viewModelScope.launch {
+//            userRepository.userAuthState.collect { result ->
+//                result.fold(
+//                    onSuccess = { user = it } ,
+//                    onFailure = {}
+//                )
+//            }
+//        }
+//    }
+//
+//    fun getAllUsers() {
+//        viewModelScope.launch {
+//            userRepository.getAllUsers().collect { result ->
+//                result.fold(
+//                    onSuccess = { userList = it } ,
+//                    onFailure = {}
+//                )
+//            }
+//        }
+//    }
     init {
-        userUiState = UiState.Loading
-        getCurrentUser()
+        getUser()
+        getAllUsers()
+//    userUiState = UiState.Loading
+//    getCurrentUser()
     }
 }

@@ -17,7 +17,7 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
-    val scores = gameViewModel.userList.sortedByDescending { it.score }
+    val userList = gameViewModel.userList.sortedByDescending { it.score }
     
     Scaffold(
         topBar = {
@@ -37,7 +37,7 @@ fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(scores) { user ->
+                items(userList) { user ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -55,7 +55,7 @@ fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text = "${user.score}s",
+                                text = "${user.score} s",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary

@@ -24,9 +24,10 @@ dependencyResolutionManagement {
         mavenCentral()
 
         // Add Jitpack repository for personal shared library
-        maven{ url = uri("https://jitpack.io") }
+        //maven{ url = uri("https://jitpack.io") }
     }
 }
 
 rootProject.name = "A056_BricksBreaker"
 include(":app")
+includeBuild("../shared-android-library") // to load shared library locally
