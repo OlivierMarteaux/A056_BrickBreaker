@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.oliviermarteaux.a056_bricksbreaker.domain.Brick
+import com.oliviermarteaux.shared.composables.SharedScaffold
 import kotlinx.coroutines.isActive
 
 @Composable
@@ -58,7 +59,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         screenWidthPx = w
         screenHeightPx = h
         paddleX = (w - paddleWidthPx) / 2
-        paddleY = (h - paddleHeightPx)
+        paddleY = (h - paddleHeightPx)  - 100f
         ballPosition = Offset(paddleX + paddleWidthPx / 2, h - paddleHeightPx - 50f - ballRadiusPx)
         ballVelocity = Offset(baseSpeed * speedMultiplier, -baseSpeed * speedMultiplier)
         //bricks = (0..4).toSet()
@@ -143,7 +144,6 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     if (newY + ballRadiusPx > screenHeightPx) {
                         gameUiState = GameUiState.GAMEOVER
                         gameViewModel.stopTime()
-                        gameViewModel.updateScore()
                     }
                     
                     ballPosition = Offset(newX, newY)
@@ -153,7 +153,13 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         }
     }
     
-    Scaffold(){ innerPadding ->
+    SharedScaffold(
+        title = "Bricks Breaker",
+        onBackClick = {
+            gameUiState = GameUiState.PAUSE
+            navController.popBackStack()
+        }
+    ){ innerPadding ->
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
@@ -204,7 +210,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                 bricks.forEach { brick ->
 
                     val left = brick.col * brickW
-                    val top = brick.row * brickHeightPx
+                    val top = brick.row * brickHeightPx + 10f
                     val width = brickW - 10f
                     val height = brickHeightPx - 10f
 

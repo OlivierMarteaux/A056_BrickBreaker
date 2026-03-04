@@ -1,10 +1,13 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui
 
+import android.R.attr.onClick
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,17 +18,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.oliviermarteaux.a056_bricksbreaker.R
+import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.BricksBreakerScreen
+import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.RootNavGraph
 import com.oliviermarteaux.shared.composables.ImageScaffold
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.composables.spacer.SpacerMedium
 import com.oliviermarteaux.shared.composables.spacer.SpacerXl
 import com.oliviermarteaux.shared.composables.spacer.SpacerXs
+import com.oliviermarteaux.shared.firebase.authentication.ui.UserAuthState
+import com.oliviermarteaux.shared.navigation.Screen
 
 @Composable
 fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
 
     SharedScaffold(
+        title = "Bricks Breaker",
+        onBackClick = { navController.navigate(Screen.Splash.route) }
     ) { innerPadding ->
         ImageScaffold(
             image = painterResource(R.drawable.bricks_breaker_logo),
@@ -36,23 +45,39 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
             imageModifier = Modifier.fillMaxWidth()
         ) {
             Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (gameViewModel.currentUser?.pseudo?.isEmpty()?:true) {
-                    Text("Please enter a pseudo")
-                    SpacerXs()
-                    SharedOutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        value = gameViewModel.pseudo,
-                        onValueChange = { gameViewModel.onPseudoChange(it) },
-                        label = "Pseudo",
-                        isError = gameViewModel.pseudo.isEmpty(),
-                        errorText = "Pseudo cannot be empty"
-                    )
-                } else {
-                    Text("Welcome, ${gameViewModel.currentUser?.pseudo?: ""}!")
+                Column(
+                    modifier = Modifier.height(120.dp)
+                ) {
+                    when (gameViewModel.userAuthState) {
+
+                        is UserAuthState.Connected -> {
+                            if (gameViewModel.currentUser?.pseudo?.isBlank() ?: true) {
+                                Text("Please enter a pseudo")
+                                SpacerXs()
+                                SharedOutlinedTextField(
+                                    modifier = Modifier.fillMaxWidth(0.8f),
+                                    value = gameViewModel.pseudo,
+                                    onValueChange = { gameViewModel.onPseudoChange(it) },
+                                    label = "Pseudo",
+                                    isError = gameViewModel.pseudo.isBlank(),
+                                    errorText = "Pseudo cannot be blank or empty"
+                                )
+                            } else {
+                                Text("Welcome, ${gameViewModel.currentUser?.pseudo ?: ""}!")
+                            }
+                        }
+
+                        else -> {
+
+                        }
+                    }
                 }
+
 
                 SpacerXl()
 
@@ -71,8 +96,12 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
                 SpacerXl()
 
                 Button(
+                    enabled =
+                        if (gameViewModel.currentUser?.pseudo?.isBlank() ?: true) gameViewModel.pseudo.isNotBlank()
+                        else true
+                    ,
                     onClick = {
-                        gameViewModel.updatePseudo()
+                        if (gameViewModel.currentUser?.pseudo?.isBlank()?:true) gameViewModel.updatePseudo()
                         navController.navigate("game")
                               },
                     modifier = Modifier.fillMaxWidth(0.8f)
@@ -83,8 +112,12 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
                 SpacerMedium()
 
                 Button(
+                    enabled =
+                        if (gameViewModel.currentUser?.pseudo?.isBlank() ?: true) gameViewModel.pseudo.isNotBlank()
+                        else true,
                     onClick = {
-                        gameViewModel.updatePseudo()
+                        if (gameViewModel.currentUser?.pseudo?.isBlank()?:true) gameViewModel.updatePseudo()
+                        gameViewModel.getAllUsers()
                         navController.navigate("score")
                               },
                     modifier = Modifier.fillMaxWidth(0.8f)

@@ -1,5 +1,7 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui
 
+import android.R.attr.fontWeight
+import android.R.attr.padding
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,23 +15,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.oliviermarteaux.shared.composables.SharedScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
-    val userList = gameViewModel.userList.sortedByDescending { it.score }
+    val userList = gameViewModel.userList.sortedBy { it.score }
     
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Scores") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
+    SharedScaffold(
+        title = "Scores",
+        onBackClick = { navController.popBackStack() }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxSize()) {
             LazyColumn(
@@ -37,7 +32,7 @@ fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(userList) { user ->
+                items(userList.filter { !it.pseudo.isBlank() }) { user ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -55,7 +50,7 @@ fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text = "${user.score} s",
+                                text = if (user.score < 0) "--" else "${user.score} s",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary

@@ -34,6 +34,7 @@ class GameViewModel @Inject constructor(
         private set
     var pseudo: String by mutableStateOf("")
         private set
+
     private var isTimerRunning = false
     private var timerJob: Job? = null
 
@@ -63,25 +64,14 @@ class GameViewModel @Inject constructor(
     }
 
     fun updatePseudo(){
-        checkUserState(
-            onUserLogged = {
-                viewModelScope.launch {
-                    userRepository.updateUser(currentUser?.copy(pseudo = pseudo)?: User())
-                }
-            },
-            onNoUserLogged = {  }
-        )
+        if (pseudo.isBlank()) return
+        updateUser(currentUser?.copy(pseudo = pseudo)?: User())
+        log.d("GameViewModel: updatePseudo(): pseudo updated to ${currentUser?.pseudo}")
     }
 
     fun updateScore() {
-        checkUserState(
-            onUserLogged = {
-                viewModelScope.launch {
-                    userRepository.updateUser(currentUser?.copy(score = timeElapsed)?: User())
-                }
-            },
-            onNoUserLogged = {  }
-        )
+        updateUser(currentUser?.copy(score = timeElapsed)?: User())
+        log.d("GameViewModel: updateScore(): score updated to ${currentUser?.score}")
     }
 
 //    var currentUser: User by mutableStateOf(User())
@@ -131,8 +121,7 @@ class GameViewModel @Inject constructor(
 //        }
 //    }
     init {
-        getUser()
-        getAllUsers()
+//        getUser()
 //    userUiState = UiState.Loading
 //    getCurrentUser()
     }
