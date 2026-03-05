@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">BricksBreaker</string>
+    <string name="bricks_breaker">Bricks Breaker</string>
+    <string name="please_enter_a_pseudo">Veuillez entrer un pseudo</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="welcome_player">Bienvenue, %1$s!</string>
+    <string name="speed_level">Vitesse</string>
+    <string name="selected_speed">Vitesse sélectionnée: %1$d</string>
+    <string name="start_new_game">Démarrer une nouvelle partie</string>
+    <string name="scores">Scores</string>
+    <string name="time_s">Temps: %1$ds</string>
+    <string name="ready_to_play">Prêt à jouer?</string>
+    <string name="click_start_to_begin_the_game">Appuyer sur start pour commencer la partie.</string>
+    <string name="start">Start</string>
+    <string name="go_back">Retour</string>
+    <string name="you_missed_the_ball_time_s">Vous avez manquez la balle! Temps: %1$ds</string>
+    <string name="game_over">Game Over</string>
+    <string name="you_win">Gagné!</string>
+    <string name="congratulations_time_s">Félicitations! Temps: %1$ds</string>
+    <string name="score_line_s">--</string>
+</resources>

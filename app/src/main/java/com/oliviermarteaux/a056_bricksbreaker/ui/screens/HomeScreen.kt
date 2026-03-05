@@ -1,31 +1,31 @@
-package com.oliviermarteaux.a056_bricksbreaker.ui
+package com.oliviermarteaux.a056_bricksbreaker.ui.screens
 
-import android.R.attr.onClick
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.oliviermarteaux.a056_bricksbreaker.R
+import com.oliviermarteaux.a056_bricksbreaker.ui.GameViewModel
 import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.BricksBreakerScreen
-import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.RootNavGraph
 import com.oliviermarteaux.shared.composables.ImageScaffold
 import com.oliviermarteaux.shared.composables.SharedOutlinedTextField
 import com.oliviermarteaux.shared.composables.SharedScaffold
+import com.oliviermarteaux.shared.composables.extensions.fontScaledHeight
 import com.oliviermarteaux.shared.composables.spacer.SpacerMedium
 import com.oliviermarteaux.shared.composables.spacer.SpacerXl
 import com.oliviermarteaux.shared.composables.spacer.SpacerXs
+import com.oliviermarteaux.shared.composables.texts.TextTitleLarge
 import com.oliviermarteaux.shared.firebase.authentication.ui.UserAuthState
 import com.oliviermarteaux.shared.navigation.Screen
 
@@ -33,9 +33,11 @@ import com.oliviermarteaux.shared.navigation.Screen
 fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
 
     SharedScaffold(
-        title = "Bricks Breaker",
-        onBackClick = { navController.navigate(Screen.Splash.route) }
+        title = stringResource(R.string.bricks_breaker),
+        onBackClick = { navController.navigate(Screen.Splash.route){popUpTo(0) { inclusive = true } } }
     ) { innerPadding ->
+
+        BackHandler() { navController.navigate(Screen.Splash.route){popUpTo(0) { inclusive = true } } }
         ImageScaffold(
             image = painterResource(R.drawable.bricks_breaker_logo),
             innerPadding = innerPadding,
@@ -46,42 +48,48 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Column(
-                    modifier = Modifier.height(120.dp)
+                    modifier = Modifier.fontScaledHeight(
+                        fontSize = 12.sp,
+                        scale = 10f,
+                        min = 110.dp,
+                        max = 170.dp
+                    )
                 ) {
                     when (gameViewModel.userAuthState) {
 
                         is UserAuthState.Connected -> {
                             if (gameViewModel.currentUser?.pseudo?.isBlank() ?: true) {
-                                Text("Please enter a pseudo")
+                                Text(stringResource(R.string.please_enter_a_pseudo))
                                 SpacerXs()
                                 SharedOutlinedTextField(
                                     modifier = Modifier.fillMaxWidth(0.8f),
                                     value = gameViewModel.pseudo,
                                     onValueChange = { gameViewModel.onPseudoChange(it) },
-                                    label = "Pseudo",
+                                    label = stringResource(R.string.pseudo),
                                     isError = gameViewModel.pseudo.isBlank(),
                                     errorText = "Pseudo cannot be blank or empty"
                                 )
                             } else {
-                                Text("Welcome, ${gameViewModel.currentUser?.pseudo ?: ""}!")
+                                SpacerXl()
+                                TextTitleLarge(
+                                    stringResource(
+                                        R.string.welcome_player,
+                                        gameViewModel.currentUser?.pseudo ?: ""
+                                    ))
                             }
                         }
-
-                        else -> {
-
-                        }
+                        else -> {}
                     }
                 }
 
 
                 SpacerXl()
 
-                Text("Speed Level")
+                Text(stringResource(R.string.speed_level))
                 SpacerXs()
                 Slider(
                     value = gameViewModel.speed,
@@ -91,7 +99,7 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
                     modifier = Modifier.fillMaxWidth(0.8f)
                 )
                 SpacerXs()
-                Text("Selected Speed: ${gameViewModel.speed.toInt()}", fontSize = 18.sp)
+                Text(stringResource(R.string.selected_speed, gameViewModel.speed.toInt()), fontSize = 18.sp)
 
                 SpacerXl()
 
@@ -102,11 +110,11 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
                     ,
                     onClick = {
                         if (gameViewModel.currentUser?.pseudo?.isBlank()?:true) gameViewModel.updatePseudo()
-                        navController.navigate("game")
+                        navController.navigate(BricksBreakerScreen.Game.route)
                               },
                     modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
-                    Text("Start New Game")
+                    Text(stringResource(R.string.start_new_game))
                 }
 
                 SpacerMedium()
@@ -118,11 +126,11 @@ fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
                     onClick = {
                         if (gameViewModel.currentUser?.pseudo?.isBlank()?:true) gameViewModel.updatePseudo()
                         gameViewModel.getAllUsers()
-                        navController.navigate("score")
+                        navController.navigate(BricksBreakerScreen.Score.route)
                               },
                     modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
-                    Text("Scores")
+                    Text(stringResource(R.string.scores))
                 }
             }
         }
