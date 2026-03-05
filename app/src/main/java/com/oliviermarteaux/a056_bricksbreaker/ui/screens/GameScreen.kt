@@ -206,6 +206,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             val cornerRadius = 18f
             val shadowOffset = 6f
 
+            // Draw background gradient
             drawRect(
                 brush = Brush.verticalGradient(
                     colors = listOf(
@@ -217,6 +218,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                 size = size
             )
 
+            // Draw paddle area limit line
             drawLine(
                 color = Color.Red,
                 strokeWidth = 2f,
@@ -328,8 +330,10 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             )
         }
 
+        // Back button
         SharedIconButton(
             icon =  IconSource.VectorIcon(Icons.AutoMirrored.Filled.ArrowBack),
+            tint = Color.Black,
             onClick = {navController.popBackStack()},
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.White,
