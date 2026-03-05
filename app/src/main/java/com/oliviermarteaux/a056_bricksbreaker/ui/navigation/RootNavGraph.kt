@@ -10,10 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.oliviermarteaux.a056_bricksbreaker.R
+import com.oliviermarteaux.a056_bricksbreaker.ui.screens.GameScreen
 import com.oliviermarteaux.a056_bricksbreaker.ui.GameViewModel
-import com.oliviermarteaux.a056_bricksbreaker.ui.HomeScreen
-import com.oliviermarteaux.a056_bricksbreaker.ui.GameScreen
-import com.oliviermarteaux.a056_bricksbreaker.ui.ScoreScreen
+import com.oliviermarteaux.a056_bricksbreaker.ui.screens.HomeScreen
+import com.oliviermarteaux.a056_bricksbreaker.ui.screens.ScoreScreen
 import com.oliviermarteaux.shared.navigation.SharedNavGraph
 import com.oliviermarteaux.shared.navigation.authNavGraph
 import com.oliviermarteaux.shared.ui.theme.SharedShapes
@@ -33,6 +33,7 @@ fun RootNavGraph(
             navHostController = navHostController,
             logoRes = logoRes,
             imageModifier = Modifier.clip(shape = SharedShapes.medium),
+            isNameRequested = false,
             serverClientIdStringRes = R.string.default_web_client_id,
             navigateToHomeScreen = {
                 navHostController.navigate(SharedNavGraph.APP) {

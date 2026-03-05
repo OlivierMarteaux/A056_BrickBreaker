@@ -30,3 +30,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "A056_BricksBreaker"
 include(":app")
+//includeBuild("../shared-android-library") // to load shared library locally

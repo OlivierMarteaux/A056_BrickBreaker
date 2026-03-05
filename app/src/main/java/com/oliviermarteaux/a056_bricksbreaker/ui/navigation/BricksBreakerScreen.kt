@@ -1,7 +1,6 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui.navigation
 
 import androidx.navigation.NamedNavArgument
-import com.oliviermarteaux.shared.compose.R
 
 /**
  * A sealed class that represents the different screens in the application.

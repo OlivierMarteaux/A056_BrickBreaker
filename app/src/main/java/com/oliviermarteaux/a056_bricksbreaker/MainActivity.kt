@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.oliviermarteaux.a056_bricksbreaker.ui.AppNavigation
 import com.oliviermarteaux.a056_bricksbreaker.ui.theme.A056_BricksBreakerTheme
 import dagger.hilt.android.AndroidEntryPoint
 

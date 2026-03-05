@@ -1,43 +1,41 @@
-package com.oliviermarteaux.a056_bricksbreaker.ui
+package com.oliviermarteaux.a056_bricksbreaker.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.oliviermarteaux.a056_bricksbreaker.R
+import com.oliviermarteaux.a056_bricksbreaker.ui.GameViewModel
+import com.oliviermarteaux.shared.composables.SharedScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
-    val scores = gameViewModel.getAllScores()
+    val noScoreList = gameViewModel.userList.filter { it.score < 0 }
+    val scoreList = gameViewModel.userList.filter { it.score >= 0 }
+    val userList = scoreList.sortedBy { it.score } + noScoreList.sortedBy { it.pseudo }
     
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Scores") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
+    SharedScaffold(
+        title = stringResource(R.string.scores),
+        onBackClick = { navController.popBackStack() }
     ) { padding ->
-        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+        Column(modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(scores) { user ->
+                items(userList.filter { !it.pseudo.isBlank() }) { user ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -55,7 +53,7 @@ fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text = "${user.score}s",
+                                text = if (user.score < 0) stringResource(R.string.score_line_s) else "${user.score} s",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
