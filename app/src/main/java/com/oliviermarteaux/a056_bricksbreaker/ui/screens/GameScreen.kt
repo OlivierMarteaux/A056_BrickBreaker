@@ -194,7 +194,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                         detectDragGestures { change, dragAmount ->
                             change.consume()
                             paddleX = (paddleX + dragAmount.x).coerceIn(0f, screenWidthPx - paddleWidthPx)
-                            paddleY = (paddleY + dragAmount.y).coerceIn(0f, screenHeightPx - paddleHeightPx)
+                            paddleY = (paddleY + dragAmount.y).coerceIn(/*0f*/screenHeightPx - 5 * paddleHeightPx, screenHeightPx - paddleHeightPx)
                         }
                     }
         ) {
@@ -215,6 +215,13 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     )
                 ),
                 size = size
+            )
+
+            drawLine(
+                color = Color.Red,
+                strokeWidth = 2f,
+                start = Offset(0f, screenHeightPx - 5 * paddleHeightPx),
+                end = Offset(screenWidthPx, screenHeightPx - 5 * paddleHeightPx)
             )
 
             bricks.forEach { brick ->
