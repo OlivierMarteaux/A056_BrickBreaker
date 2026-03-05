@@ -19,7 +19,9 @@ import com.oliviermarteaux.shared.composables.SharedScaffold
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
-    val userList = gameViewModel.userList.sortedBy { it.score }
+    val noScoreList = gameViewModel.userList.filter { it.score < 0 }
+    val scoreList = gameViewModel.userList.filter { it.score >= 0 }
+    val userList = scoreList.sortedBy { it.score } + noScoreList.sortedBy { it.pseudo }
     
     SharedScaffold(
         title = stringResource(R.string.scores),

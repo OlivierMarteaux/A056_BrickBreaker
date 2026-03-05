@@ -33,6 +33,7 @@ fun RootNavGraph(
             navHostController = navHostController,
             logoRes = logoRes,
             imageModifier = Modifier.clip(shape = SharedShapes.medium),
+            isNameRequested = false,
             serverClientIdStringRes = R.string.default_web_client_id,
             navigateToHomeScreen = {
                 navHostController.navigate(SharedNavGraph.APP) {

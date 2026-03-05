@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -190,17 +191,12 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        paddleX =
-                            (paddleX + dragAmount.x).coerceIn(0f, screenWidthPx - paddleWidthPx)
-                        paddleY =
-                            (paddleY + dragAmount.y).coerceIn(
-                                0f,
-                                screenHeightPx - paddleHeightPx
-                            )
+                        detectDragGestures { change, dragAmount ->
+                            change.consume()
+                            paddleX = (paddleX + dragAmount.x).coerceIn(0f, screenWidthPx - paddleWidthPx)
+                            paddleY = (paddleY + dragAmount.y).coerceIn(0f, screenHeightPx - paddleHeightPx)
+                        }
                     }
-                }
         ) {
             if (screenWidthPx == 0f) return@Canvas
 

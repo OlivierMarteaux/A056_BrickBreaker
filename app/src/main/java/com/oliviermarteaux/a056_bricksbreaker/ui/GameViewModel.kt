@@ -70,59 +70,13 @@ class GameViewModel @Inject constructor(
     }
 
     fun updateScore() {
-        updateUser(currentUser?.copy(score = timeElapsed)?: User())
-        log.d("GameViewModel: updateScore(): score updated to ${currentUser?.score}")
-    }
-
-//    var currentUser: User by mutableStateOf(User())
-//        private set
-//
-//    var userUiState: UiState<User> by mutableStateOf(UiState.Loading)
-
-//    private fun getCurrentUser(){
-//        viewModelScope.launch {
-////            delay(1500) // for test
-//            userRepository.userAuthState
-//                .collect { currentUser ->
-//                    if (currentUser != null) {
-//                        userUiState = UiState.Success(currentUser)
-//                        this@GameViewModel.currentUser = currentUser
-//                        log.d("AccountViewModel: user updated to ${currentUser.email}")
-//                        log.d("AccountViewModel: userPhotoUrl = ${currentUser.photoUrl}")
-//                    } else {
-//                        userUiState = UiState.Error(Throwable("No user logged in"))
-//                        log.d("AccountViewModel: no user logged in")
-//                    }
-//                }
-//        }
-//    }
-
-//    var userList: List<User> by mutableStateOf(emptyList())
-
-//    fun getUser() {
-//        viewModelScope.launch {
-//            userRepository.userAuthState.collect { result ->
-//                result.fold(
-//                    onSuccess = { user = it } ,
-//                    onFailure = {}
-//                )
-//            }
-//        }
-//    }
-//
-//    fun getAllUsers() {
-//        viewModelScope.launch {
-//            userRepository.getAllUsers().collect { result ->
-//                result.fold(
-//                    onSuccess = { userList = it } ,
-//                    onFailure = {}
-//                )
-//            }
-//        }
-//    }
-    init {
-//        getUser()
-//    userUiState = UiState.Loading
-//    getCurrentUser()
+        currentUser?.let {
+            val newScore = when (it.score) {
+                -1L -> timeElapsed
+                else -> minOf(timeElapsed, it.score)
+            }
+            updateUser(it.copy(score = newScore))
+            log.d("GameViewModel: updateScore(): score updated to ${currentUser?.score}")
+        }
     }
 }
