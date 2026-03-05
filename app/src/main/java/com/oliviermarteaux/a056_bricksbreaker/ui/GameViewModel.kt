@@ -28,6 +28,15 @@ class GameViewModel @Inject constructor(
     isOnlineFlow = isOnlineFlow,
     log = log,
 ) {
+    var level: LevelUiState by mutableStateOf(LevelUiState.LEVEL1)
+        private set
+    fun nextLevel() {
+        level = when (level) {
+            LevelUiState.LEVEL1 -> LevelUiState.LEVEL2
+            LevelUiState.LEVEL2 -> LevelUiState.LEVEL3
+            LevelUiState.LEVEL3 -> LevelUiState.LEVEL1
+        }
+    }
     var speed by mutableFloatStateOf(5f)
         private set
     var timeElapsed by mutableLongStateOf(0L)

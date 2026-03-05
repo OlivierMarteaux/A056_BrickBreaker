@@ -4,15 +4,25 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -20,26 +30,25 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.oliviermarteaux.a056_bricksbreaker.R
-import com.oliviermarteaux.shared.compose.R as oR
 import com.oliviermarteaux.a056_bricksbreaker.domain.Brick
+import com.oliviermarteaux.a056_bricksbreaker.domain.Wall
 import com.oliviermarteaux.a056_bricksbreaker.ui.GameUiState
 import com.oliviermarteaux.a056_bricksbreaker.ui.GameViewModel
+import com.oliviermarteaux.a056_bricksbreaker.ui.LevelUiState
 import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.BricksBreakerScreen
 import com.oliviermarteaux.shared.composables.IconSource
 import com.oliviermarteaux.shared.composables.SharedIconButton
-import com.oliviermarteaux.shared.composables.SharedScaffold
 import kotlinx.coroutines.isActive
+import com.oliviermarteaux.shared.compose.R as oR
 
 @Composable
 fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
@@ -71,7 +80,13 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
     val brickCol: Int = 5
     val brickRow: Int = 4
     var previousTime by remember { mutableStateOf(0L) }
-    
+
+    //_ walls def for next levels
+    val topDownWalls = when(gameViewModel.level) {
+        LevelUiState.LEVEL1 -> emptySet()
+        else -> setOf(Wall(Offset(screenWidthPx/2f, screenHeightPx/2f ), Size(400f, 100f)))
+    }
+
     val speedLevel = gameViewModel.speed
     val baseSpeed = 200f // pixels per second for level 1
     val speedMultiplier = speedLevel
@@ -151,6 +166,15 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                             gameViewModel.updateScore()
                         }
                     }
+
+                    //_ Hit top-down walls
+                    val hitTopDownWall = topDownWalls.forEach{
+                        if (newY - ballRadiusPx <= it.topLeft.y + it.size.height && newY + ballRadiusPx >= it.topLeft.y + it.size.height) {
+                            if (newX >= it.topLeft.x && newX <= it.topLeft.x + it.size.width){
+                            vy = Math.abs(vy)
+                                }
+                        }
+                    }
                     
                     // Hit paddle
                     val paddleTop = screenHeightPx - paddleHeightPx - 50f
@@ -217,6 +241,22 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                 ),
                 size = size
             )
+
+            //_ Draw top-down wall
+            topDownWalls.forEach {
+                drawRect(
+                    topLeft = it.topLeft,
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0x00F44336),
+                            Color(0xFFF44336),
+                        ),
+                        startY = screenHeightPx / 2,
+                        endY = screenHeightPx / 2 + 100f
+                    ),
+                    size = it.size,
+                )
+            }
 
             // Draw paddle area limit line
             drawLine(
@@ -349,7 +389,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         if (gameUiState == GameUiState.STARTING) {
             AlertDialog(
                 onDismissRequest = { },
-                title = { Text(stringResource(R.string.ready_to_play)) },
+                title = { Text("Level ${gameViewModel.level}" + stringResource(R.string.ready_to_play)) },
                 text = { Text(stringResource(R.string.click_start_to_begin_the_game)) },
                 confirmButton = {
                     Button(onClick = { gameUiState = GameUiState.PLAYING }) {
@@ -391,12 +431,21 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     stringResource(
                         R.string.congratulations_time_s,
                         gameViewModel.timeElapsed
-                    )) },
+                    ) + "Continue to next level?") },
                 confirmButton = {
+                    Button(onClick = {
+                        initGame(wPx, hPx)
+                        gameViewModel.nextLevel()
+                        gameUiState = GameUiState.STARTING
+                    }){
+                        Text(stringResource(oR.string.ok))
+                    }
+                },
+                dismissButton = {
                     Button(onClick = {
                         navController.popBackStack(BricksBreakerScreen.Home.route, false)
                     }) {
-                        Text(stringResource(oR.string.ok))
+                        Text("Back to home")
                     }
                 }
             )
