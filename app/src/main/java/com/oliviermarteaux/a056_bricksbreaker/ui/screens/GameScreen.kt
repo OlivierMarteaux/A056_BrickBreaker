@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.android.play.integrity.internal.f
 import com.oliviermarteaux.a056_bricksbreaker.R
 import com.oliviermarteaux.a056_bricksbreaker.domain.Brick
 import com.oliviermarteaux.a056_bricksbreaker.domain.Bumper
@@ -87,16 +88,60 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
 
     //_ walls def for next levels
     val topDownWalls = when(gameViewModel.level) {
-        LevelUiState.LEVEL1 -> emptySet()
-        else -> setOf(Wall(Offset(screenWidthPx/2f, screenHeightPx/2f ), Size(400f, 100f)))
+        LevelUiState.LEVEL2  -> setOf(Wall(Offset(screenWidthPx/2f, screenHeightPx/2f ), Size(400f, 100f)))
+        LevelUiState.LEVEL4  -> setOf(
+            Wall(Offset(screenWidthPx/4f, screenHeightPx/3f ), Size(400f, 100f)),
+            Wall(Offset(3*screenWidthPx/5f, 2* screenHeightPx/5f), Size(400f, 100f))
+        )
+        LevelUiState.LEVEL10  -> setOf(
+            Wall(Offset(screenWidthPx/2f-200f, 2*screenHeightPx/6f ), Size(400f, 200f)),
+            Wall(Offset(screenWidthPx/2f-150f, 3*screenHeightPx/6f ), Size(300f, 200f)),
+            Wall(Offset(screenWidthPx/2f-50f, 4*screenHeightPx/6f ), Size(100f, 200f)),
+            )
+        else -> emptySet()
     }
     val bumpers = when(gameViewModel.level) {
-        LevelUiState.LEVEL1 -> setOf(Bumper(200f, Offset(screenWidthPx/2f, screenHeightPx/2f )))
-        else -> setOf(Bumper(100f, Offset(screenWidthPx/2f, screenHeightPx/2f )))
+        LevelUiState.LEVEL3 -> setOf(Bumper(200f, Offset(screenWidthPx/2f, screenHeightPx/2f )))
+        LevelUiState.LEVEL5 -> setOf(
+            Bumper(200f, Offset(screenWidthPx/4f, screenHeightPx/3f )),
+            Bumper(200f, Offset(3*screenWidthPx/4f, screenHeightPx/3f )),
+        )
+        LevelUiState.LEVEL6 -> setOf(
+            Bumper(100f, Offset(screenWidthPx/4f, screenHeightPx/3f )),
+            Bumper(100f, Offset(3*screenWidthPx/5f, 2*screenHeightPx/4f )),
+            Bumper(100f, Offset(3*screenWidthPx/4f, 2*screenHeightPx/3f )),
+        )
+        LevelUiState.LEVEL7 -> setOf(
+                Bumper(100f, Offset(screenWidthPx/7f-50, 2*screenHeightPx/7f )),
+                Bumper(100f, Offset(screenWidthPx/7f-50, 3*screenHeightPx/7f )),
+                Bumper(100f, Offset(screenWidthPx/7f-50, 4*screenHeightPx/7f )),
+                Bumper(100f, Offset(7*screenWidthPx/7f-100, 2*screenHeightPx/7f )),
+                Bumper(100f, Offset(7*screenWidthPx/7f-100, 3*screenHeightPx/7f )),
+                Bumper(100f, Offset(7*screenWidthPx/7f-100, 4*screenHeightPx/7f )),
+            )
+        LevelUiState.LEVEL8 -> setOf(
+            Bumper(100f, Offset(1*screenWidthPx/7f+50, 2*screenHeightPx/4f )),
+            Bumper(100f, Offset(4*screenWidthPx/7f-100, 2*screenHeightPx/4f )),
+            Bumper(100f, Offset(7*screenWidthPx/7f-250, 2*screenHeightPx/4f )),
+        )
+        LevelUiState.LEVEL9 -> setOf(
+            Bumper(50f, Offset(5*screenWidthPx/10f, 1000f )),
+            Bumper(50f, Offset(4*screenWidthPx/10f, 1200f )),
+            Bumper(50f, Offset(6*screenWidthPx/10f, 1200f )),
+            Bumper(50f, Offset(3*screenWidthPx/10f, 1400f )),
+            Bumper(50f, Offset(7*screenWidthPx/10f, 1400f )),
+            Bumper(50f, Offset(3*screenWidthPx/10f, 1600f )),
+            Bumper(50f, Offset(7*screenWidthPx/10f, 1600f )),
+            Bumper(50f, Offset(4*screenWidthPx/10f, 1800f )),
+            Bumper(50f, Offset(6*screenWidthPx/10f, 1800f )),
+            Bumper(50f, Offset(5*screenWidthPx/10f, 2000f )),
+        )
+        else -> emptySet()
+
     }
 
     val speedLevel = gameViewModel.speed
-    val baseSpeed = 200f // pixels per second for level 1
+    val baseSpeed = 400f // pixels per second for level 1
     val speedMultiplier = speedLevel
     
     fun initGame(w: Float, h: Float) {
@@ -248,12 +293,16 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            paddleX = (paddleX + dragAmount.x).coerceIn(0f, screenWidthPx - paddleWidthPx)
-                            paddleY = (paddleY + dragAmount.y).coerceIn(/*0f*/screenHeightPx - 5 * paddleHeightPx, screenHeightPx - paddleHeightPx)
-                        }
+                    detectDragGestures { change, dragAmount ->
+                        change.consume()
+                        paddleX =
+                            (paddleX + dragAmount.x).coerceIn(0f, screenWidthPx - paddleWidthPx)
+                        paddleY =
+                            (paddleY + dragAmount.y).coerceIn(/*0f*/screenHeightPx - 5 * paddleHeightPx,
+                                screenHeightPx - paddleHeightPx
+                            )
                     }
+                }
         ) {
             if (screenWidthPx == 0f) return@Canvas
 
@@ -284,8 +333,8 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                             Color(0x00F44336),
                             Color(0xFFF44336),
                         ),
-                        startY = screenHeightPx / 2,
-                        endY = screenHeightPx / 2 + 100f
+                        startY = it.topLeft.y,
+                        endY = it.topLeft.y + it.size.height
                     ),
                     size = it.size,
                 )
@@ -297,7 +346,9 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     brush = Brush.radialGradient(
                         colors = listOf(
                             Color(0xFFFF5252),
-                            Color(0xFFFF9D52)
+                            Color(0xFFFF9D52),
+                            Color(0xFFFFCE52)
+
                         )
                     ),
                     radius = it.radius,
@@ -436,7 +487,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         if (gameUiState == GameUiState.STARTING) {
             AlertDialog(
                 onDismissRequest = { },
-                title = { Text("Level ${gameViewModel.level}" + stringResource(R.string.ready_to_play)) },
+                title = { Text(stringResource(R.string.level, gameViewModel.level.level) + stringResource(R.string.ready_to_play)) },
                 text = { Text(stringResource(R.string.click_start_to_begin_the_game)) },
                 confirmButton = {
                     Button(onClick = { gameUiState = GameUiState.PLAYING }) {
@@ -478,7 +529,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     stringResource(
                         R.string.congratulations_time_s,
                         gameViewModel.timeElapsed
-                    ) + "Continue to next level?") },
+                    )) },
                 confirmButton = {
                     Button(onClick = {
                         initGame(wPx, hPx)

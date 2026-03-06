@@ -16,6 +16,7 @@
     <string name="you_missed_the_ball_time_s">You missed the ball! Time: %1$ds</string>
     <string name="game_over">Game Over</string>
     <string name="you_win">You Win!</string>
-    <string name="congratulations_time_s">Congratulations! Time: %1$ds</string>
+    <string name="congratulations_time_s">Congratulations! Time: %1$ds. Continue to next level?</string>
     <string name="score_line_s">--</string>
+    <string name="level">"Level %1$d. "</string>
 </resources>

@@ -34,7 +34,14 @@ class GameViewModel @Inject constructor(
         level = when (level) {
             LevelUiState.LEVEL1 -> LevelUiState.LEVEL2
             LevelUiState.LEVEL2 -> LevelUiState.LEVEL3
-            LevelUiState.LEVEL3 -> LevelUiState.LEVEL1
+            LevelUiState.LEVEL3 -> LevelUiState.LEVEL4
+            LevelUiState.LEVEL4 -> LevelUiState.LEVEL5
+            LevelUiState.LEVEL5 -> LevelUiState.LEVEL6
+            LevelUiState.LEVEL6 -> LevelUiState.LEVEL7
+            LevelUiState.LEVEL7 -> LevelUiState.LEVEL8
+            LevelUiState.LEVEL8 -> LevelUiState.LEVEL9
+            LevelUiState.LEVEL9 -> LevelUiState.LEVEL10
+            LevelUiState.LEVEL10 -> LevelUiState.LEVEL1
         }
     }
     var speed by mutableFloatStateOf(5f)
