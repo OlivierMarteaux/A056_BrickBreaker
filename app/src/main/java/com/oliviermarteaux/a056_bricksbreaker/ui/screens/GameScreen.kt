@@ -196,14 +196,14 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                             val ballX = newX - ballRadiusPx * cos(bumperT)
                             val ballY = newY + ballRadiusPx * sin(bumperT)
 
-                            if (ballX in (bumperX - 100f..bumperX + 0f) && ballY in (bumperY + 0f..bumperY + 100f)) {
-                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
+                            if (ballX in (bumperX - 100f..bumperX + 0f) && ballY in (bumperY + 0f..bumperY + 100f) && vy > 0 && vx <0 ) {
+//                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
+//                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
 
                                 vy =
-                                    (ballVelocity.y * cos(2 * bumperT).toFloat() + ballVelocity.x * sin(2 * bumperT).toFloat())
+                                    (vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat())
                                 vx =
-                                    - ballVelocity.x * cos(2 * bumperT).toFloat() - ballVelocity.y * sin(2 * bumperT).toFloat()
+                                    - vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
                             }
                         }
                     }
@@ -216,14 +216,14 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                             val ballX = newX - ballRadiusPx * cos(bumperT)
                             val ballY = newY + ballRadiusPx * sin(bumperT)
 
-                            if (ballX in (bumperX - 0f..bumperX + 100f) && ballY in (bumperY + 0f..bumperY + 100f)) {
-                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
+                            if (ballX in (bumperX - 0f..bumperX + 100f) && ballY in (bumperY + 0f..bumperY + 100f) && vy > 0 && vx >0) {
+//                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
+//                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
 
                                 vy =
-                                    ballVelocity.y * cos(2 * bumperT).toFloat() + ballVelocity.x * sin(2 * bumperT).toFloat()
+                                    vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat()
                                 vx =
-                                    - ballVelocity.x * cos(2 * bumperT).toFloat() - ballVelocity.y * sin(2 * bumperT).toFloat()
+                                    - vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
                             }
                         }
                     }
@@ -236,14 +236,14 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                             val ballX = newX - ballRadiusPx * cos(bumperT)
                             val ballY = newY + ballRadiusPx * sin(bumperT)
 
-                            if (ballX in (bumperX - 0f..bumperX + 100f) && ballY in (bumperY - 100f..bumperY + 0f)) {
-                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
+                            if (ballX in (bumperX - 0f..bumperX + 100f) && ballY in (bumperY - 100f..bumperY + 0f) && vy < 0 && vx >0) {
+//                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
+//                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
 
                                 vy =
-                                    ballVelocity.y * cos(2 * bumperT).toFloat() + ballVelocity.x * sin(2 * bumperT).toFloat()
+                                    vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat()
                                 vx =
-                                    - ballVelocity.x * cos(2 * bumperT).toFloat() - ballVelocity.y * sin(2 * bumperT).toFloat()
+                                    - vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
                             }
                         }
                     }
@@ -256,15 +256,13 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                             val ballX = newX - ballRadiusPx * cos(bumperT)
                             val ballY = newY + ballRadiusPx * sin(bumperT)
 
-                            if (ballX in (bumperX - 100f..bumperX + 0f)) {
-                                if (ballY in (bumperY - 100f..bumperY + 0f)) {
-                                    newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-                                    newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
+                            if (ballX in (bumperX - 100f..bumperX + 0f) && ballY in (bumperY - 100f..bumperY + 0f) && vy < 0 && vx <0) {
+//                                    newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
+//                                    newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
                                     vy =
-                                        ballVelocity.y * cos(2 * bumperT).toFloat() + ballVelocity.x * sin(2 * bumperT).toFloat()
+                                        vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat()
                                     vx =
-                                        -ballVelocity.x * cos(2 * bumperT).toFloat() - ballVelocity.y * sin(2 * bumperT).toFloat()
-                                }
+                                        -vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
                             }
                         }
                     }
