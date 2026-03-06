@@ -1,7 +1,7 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui.screens
 
-import android.R.attr.radius
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -31,7 +31,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -51,11 +50,9 @@ import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.BricksBreakerScreen
 import com.oliviermarteaux.shared.composables.IconSource
 import com.oliviermarteaux.shared.composables.SharedIconButton
 import kotlinx.coroutines.isActive
-import kotlin.collections.forEach
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.sqrt
 import com.oliviermarteaux.shared.compose.R as oR
+
 
 @Composable
 fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
@@ -135,6 +132,8 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     var newY = ballPosition.y + ballVelocity.y * dt
                     var vx = ballVelocity.x
                     var vy = ballVelocity.y
+
+                    Log.d("OM_TAG", " vx: $vx, vy: $vy")
                     
                     // Bounce walls
                     if (newX - ballRadiusPx < 0) {
@@ -186,84 +185,27 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                                 }
                         }
                     }
+
                     //_ Hit bumpers
-                    val hitBumpers1 = bumpers.forEach {
-                        for (i in 1 ..89) {
-                            val bumperT = i * PI / 180f
-                            val bumperX = it.center.x + it.radius * cos(bumperT)
-                            val bumperY = it.center.y - it.radius * sin(bumperT)
+                    bumpers.forEach { bumper ->
 
-                            val ballX = newX - ballRadiusPx * cos(bumperT)
-                            val ballY = newY + ballRadiusPx * sin(bumperT)
+                        val dx = newX - bumper.center.x
+                        val dy = newY - bumper.center.y
+                        val dist = sqrt(dx * dx + dy * dy)
 
-                            if (ballX in (bumperX - 100f..bumperX + 0f) && ballY in (bumperY + 0f..bumperY + 100f) && vy > 0 && vx <0 ) {
-//                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-//                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
+                        if (dist < bumper.radius + ballRadiusPx) {
 
-                                vy =
-                                    (vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat())
-                                vx =
-                                    - vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
-                            }
-                        }
-                    }
-                    val hitBumpers2 = bumpers.forEach {
-                        for (i in 91 ..179) {
-                            val bumperT = i * PI / 180f
-                            val bumperX = it.center.x + it.radius * cos(bumperT)
-                            val bumperY = it.center.y - it.radius * sin(bumperT)
+                            val nx = dx / dist
+                            val ny = dy / dist
 
-                            val ballX = newX - ballRadiusPx * cos(bumperT)
-                            val ballY = newY + ballRadiusPx * sin(bumperT)
+                            val dot = vx * nx + vy * ny
 
-                            if (ballX in (bumperX - 0f..bumperX + 100f) && ballY in (bumperY + 0f..bumperY + 100f) && vy > 0 && vx >0) {
-//                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-//                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
+                            vx -= 2 * dot * nx
+                            vy -= 2 * dot * ny
 
-                                vy =
-                                    vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat()
-                                vx =
-                                    - vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
-                            }
-                        }
-                    }
-                    val hitBumpers3 = bumpers.forEach {
-                        for (i in 181 ..269) {
-                            val bumperT = i * PI / 180f
-                            val bumperX = it.center.x + it.radius * cos(bumperT)
-                            val bumperY = it.center.y - it.radius * sin(bumperT)
-
-                            val ballX = newX - ballRadiusPx * cos(bumperT)
-                            val ballY = newY + ballRadiusPx * sin(bumperT)
-
-                            if (ballX in (bumperX - 0f..bumperX + 100f) && ballY in (bumperY - 100f..bumperY + 0f) && vy < 0 && vx >0) {
-//                                newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-//                                newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
-
-                                vy =
-                                    vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat()
-                                vx =
-                                    - vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
-                            }
-                        }
-                    }
-                    val hitBumpers4 = bumpers.forEach {
-                        for (i in 271 ..359) {
-                            val bumperT = i * PI / 180f
-                            val bumperX = it.center.x + it.radius * cos(bumperT)
-                            val bumperY = it.center.y - it.radius * sin(bumperT)
-
-                            val ballX = newX - ballRadiusPx * cos(bumperT)
-                            val ballY = newY + ballRadiusPx * sin(bumperT)
-
-                            if (ballX in (bumperX - 100f..bumperX + 0f) && ballY in (bumperY - 100f..bumperY + 0f) && vy < 0 && vx <0) {
-//                                    newX = (bumperX + ballRadiusPx * cos(bumperT)).toFloat()
-//                                    newY = (bumperY - ballRadiusPx * sin(bumperT)).toFloat()
-                                    vy =
-                                        vy * cos(2 * bumperT).toFloat() + vx * sin(2 * bumperT).toFloat()
-                                    vx =
-                                        -vx * cos(2 * bumperT).toFloat() - vy * sin(2 * bumperT).toFloat()
-                            }
+                            val overlap = bumper.radius + ballRadiusPx - dist
+                            newX += nx * overlap
+                            newY += ny * overlap
                         }
                     }
                     
