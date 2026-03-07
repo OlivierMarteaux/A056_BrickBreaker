@@ -32,11 +32,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.ImageShader
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -109,7 +117,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         else -> emptySet()
     }
     val bumpers = when(gameViewModel.currentLevel) {
-        GameLevel.LEVEL3 -> setOf(Bumper(200f, Offset(screenWidthPx/2f, screenHeightPx/2f )))
+        GameLevel.LEVEL1 -> setOf(Bumper(200f, Offset(screenWidthPx/2f, screenHeightPx/2f )))
         GameLevel.LEVEL5 -> setOf(
             Bumper(200f, Offset(screenWidthPx/4f, screenHeightPx/3f )),
             Bumper(200f, Offset(3*screenWidthPx/4f, screenHeightPx/3f )),
@@ -295,6 +303,20 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             }
         }
 
+//        val bumperShader = ImageShader(
+//            image = ImageBitmap.imageResource(R.drawable.bumper),
+//            tileModeX = TileMode.Clamp,
+//            tileModeY = TileMode.Clamp
+//        )
+//        val paddleShader = ImageShader(
+//            image = ImageBitmap.imageResource(R.drawable.bumper),
+//            tileModeX = TileMode.Clamp,
+//            tileModeY = TileMode.Clamp
+//        )
+
+        val bumperImage = ImageBitmap.imageResource(R.drawable.bumper)
+//        val paddleImage = ImageBitmap.imageResource(R.drawable.paddle)
+
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -347,22 +369,31 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             }
 
             //_ Draw bumper
-            bumpers.forEach {
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            Color(0xFFFF5252),
-                            Color(0xFFFF9D52),
-                            Color(0xFFFFCE52)
 
-                        )
+//            bumpers.forEach {
+//                drawCircle(
+//                    brush = ShaderBrush(bumperShader),
+//                    radius = it.radius,
+//                    center = it.center
+//                )
+//            }
+            bumpers.forEach {
+
+                drawImage(
+                    image = bumperImage,
+                    dstOffset = IntOffset(
+                        (it.center.x - it.radius).toInt(),
+                        (it.center.y - it.radius).toInt()
                     ),
-                    radius = it.radius,
-                    center = it.center
+                    dstSize = IntSize(
+                        (it.radius * 2).toInt(),
+                        (it.radius * 2).toInt()
+                    )
                 )
             }
 
             // Draw paddle area limit line
+
             drawLine(
                 color = Color.Red,
                 strokeWidth = 2f,
@@ -408,17 +439,29 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             }
 
             // Draw paddle
-            val paddleCorner = 40f
+//            drawImage(
+//                image = paddleImage,
+//                dstOffset = IntOffset(
+//                    (paddleX).toInt(),
+//                    (paddleY).toInt()
+//                ),
+//                dstSize = IntSize(
+//                    (paddleWidthPx).toInt(),
+//                    (paddleHeightPx).toInt()
+//                )
+//            )
 
-            // Shadow
+            val paddleCorner = 40f
+//
+//            // Shadow
             drawRoundRect(
                 color = Color.Black.copy(alpha = 0.3f),
                 topLeft = Offset(paddleX + 8f, paddleY + 8f),
                 size = Size(paddleWidthPx, paddleHeightPx),
                 cornerRadius = CornerRadius(paddleCorner, paddleCorner)
             )
-
-            // Paddle body
+//
+//            // Paddle body
             drawRoundRect(
                 brush = Brush.horizontalGradient(
                     colors = listOf(
@@ -426,12 +469,13 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                         Color(0xFF00C853)
                     )
                 ),
+//                brush = ShaderBrush(paddleShader),
                 topLeft = Offset(paddleX, paddleY),
                 size = Size(paddleWidthPx, paddleHeightPx),
                 cornerRadius = CornerRadius(paddleCorner, paddleCorner)
             )
-
-            // Glow
+//
+//            // Glow
             drawCircle(
                 color = Color.Red.copy(alpha = 0.25f),
                 radius = ballRadiusPx * 1.8f,

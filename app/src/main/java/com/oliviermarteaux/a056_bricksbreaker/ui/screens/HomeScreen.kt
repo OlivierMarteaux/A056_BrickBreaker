@@ -36,6 +36,7 @@ import com.oliviermarteaux.shared.firebase.authentication.domain.model.GameLevel
 import com.oliviermarteaux.shared.firebase.authentication.ui.UserAuthState
 import com.oliviermarteaux.shared.navigation.Screen
 import com.oliviermarteaux.shared.ui.UiState
+import kotlin.math.roundToInt
 
 @Composable
 fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
@@ -134,7 +135,7 @@ fun HomeScreenBody(
             modifier = Modifier.fillMaxWidth(0.8f)
         )
         SpacerXs()
-        Text(stringResource(R.string.selected_speed, gameViewModel.speed.toInt()), fontSize = 18.sp)
+        Text(stringResource(R.string.selected_speed, gameViewModel.speed.roundToInt()), fontSize = 18.sp)
 
         SpacerXl()
 
