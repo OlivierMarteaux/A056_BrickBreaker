@@ -1,5 +1,6 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui.screens
 
+import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -81,10 +83,19 @@ fun HomeScreenBody(
     navController: NavController,
     gameViewModel: GameViewModel
 ){
+    val configuration = LocalConfiguration.current
+    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+    // Remember scroll state only if portrait
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize(),
+            .fillMaxSize()
+            .then(
+                if (isPortrait) Modifier.verticalScroll(scrollState)
+                else Modifier // do nothing in landscape
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(

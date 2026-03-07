@@ -315,7 +315,8 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
 //        )
 
         val bumperImage = ImageBitmap.imageResource(R.drawable.bumper)
-//        val paddleImage = ImageBitmap.imageResource(R.drawable.paddle)
+        val brickImage = ImageBitmap.imageResource(R.drawable.brick)
+        val paddleImage = ImageBitmap.imageResource(R.drawable.paddle)
 
         Canvas(
             modifier = Modifier
@@ -405,82 +406,94 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
 
                 val left = brick.col * brickW
                 val top = brick.row * brickHeightPx + 200f
-                val width = brickW - 10f
-                val height = brickHeightPx - 10f
+                val width = brickW
+                val height = brickHeightPx
 
-                // Shadow
-                drawRoundRect(
-                    color = Color.Black.copy(alpha = 0.25f),
-                    topLeft = Offset(left + shadowOffset, top + shadowOffset),
-                    size = Size(width, height),
-                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
-                )
-
-                // Main brick with gradient
-                drawRoundRect(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF4FC3F7),  // light top
-                            Color(0xFF1976D2)   // darker bottom
-                        )
+                drawImage(
+                    image = brickImage,
+                    dstOffset = IntOffset(
+                        left.toInt(),
+                        top.toInt()
                     ),
-                    topLeft = Offset(left, top),
-                    size = Size(width, height),
-                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+                    dstSize = IntSize(
+                        width.toInt(),
+                        height.toInt()
+                    )
                 )
 
-                // Gloss highlight
-                drawRoundRect(
-                    color = Color.White.copy(alpha = 0.15f),
-                    topLeft = Offset(left, top),
-                    size = Size(width, height / 2),
-                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
-                )
+//                // Shadow
+//                drawRoundRect(
+//                    color = Color.Black.copy(alpha = 0.25f),
+//                    topLeft = Offset(left + shadowOffset, top + shadowOffset),
+//                    size = Size(width, height),
+//                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+//                )
+//
+//                // Main brick with gradient
+//                drawRoundRect(
+//                    brush = Brush.verticalGradient(
+//                        colors = listOf(
+//                            Color(0xFF4FC3F7),  // light top
+//                            Color(0xFF1976D2)   // darker bottom
+//                        )
+//                    ),
+//                    topLeft = Offset(left, top),
+//                    size = Size(width, height),
+//                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+//                )
+//
+//                // Gloss highlight
+//                drawRoundRect(
+//                    color = Color.White.copy(alpha = 0.15f),
+//                    topLeft = Offset(left, top),
+//                    size = Size(width, height / 2),
+//                    cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+//                )
             }
 
             // Draw paddle
-//            drawImage(
-//                image = paddleImage,
-//                dstOffset = IntOffset(
-//                    (paddleX).toInt(),
-//                    (paddleY).toInt()
-//                ),
-//                dstSize = IntSize(
-//                    (paddleWidthPx).toInt(),
-//                    (paddleHeightPx).toInt()
-//                )
-//            )
-
-            val paddleCorner = 40f
-//
-//            // Shadow
-            drawRoundRect(
-                color = Color.Black.copy(alpha = 0.3f),
-                topLeft = Offset(paddleX + 8f, paddleY + 8f),
-                size = Size(paddleWidthPx, paddleHeightPx),
-                cornerRadius = CornerRadius(paddleCorner, paddleCorner)
-            )
-//
-//            // Paddle body
-            drawRoundRect(
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        Color(0xFF00E676),
-                        Color(0xFF00C853)
-                    )
+            drawImage(
+                image = paddleImage,
+                dstOffset = IntOffset(
+                    (paddleX).toInt(),
+                    (paddleY).toInt()
                 ),
-//                brush = ShaderBrush(paddleShader),
-                topLeft = Offset(paddleX, paddleY),
-                size = Size(paddleWidthPx, paddleHeightPx),
-                cornerRadius = CornerRadius(paddleCorner, paddleCorner)
+                dstSize = IntSize(
+                    (paddleWidthPx).toInt(),
+                    (paddleHeightPx).toInt()
+                )
             )
-//
-//            // Glow
-            drawCircle(
-                color = Color.Red.copy(alpha = 0.25f),
-                radius = ballRadiusPx * 1.8f,
-                center = ballPosition
-            )
+
+//            val paddleCorner = 40f
+////
+////            // Shadow
+//            drawRoundRect(
+//                color = Color.Black.copy(alpha = 0.3f),
+//                topLeft = Offset(paddleX + 8f, paddleY + 8f),
+//                size = Size(paddleWidthPx, paddleHeightPx),
+//                cornerRadius = CornerRadius(paddleCorner, paddleCorner)
+//            )
+////
+////            // Paddle body
+//            drawRoundRect(
+//                brush = Brush.horizontalGradient(
+//                    colors = listOf(
+//                        Color(0xFF00E676),
+//                        Color(0xFF00C853)
+//                    )
+//                ),
+////                brush = ShaderBrush(paddleShader),
+//                topLeft = Offset(paddleX, paddleY),
+//                size = Size(paddleWidthPx, paddleHeightPx),
+//                cornerRadius = CornerRadius(paddleCorner, paddleCorner)
+//            )
+////
+////            // Glow
+//            drawCircle(
+//                color = Color.Red.copy(alpha = 0.25f),
+//                radius = ballRadiusPx * 1.8f,
+//                center = ballPosition
+//            )
 
             // Main ball
             drawCircle(
