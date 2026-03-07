@@ -29,17 +29,17 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
-                ) { Box(modifier = Modifier.fillMaxSize())
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.background),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
-                            alpha = 0.5f
-                        )
+                ) {
+//                    Box(modifier = Modifier.fillMaxSize()) {
+//                        Image(
+//                            painter = painterResource(id = R.drawable.background),
+//                            contentDescription = null,
+//                            contentScale = ContentScale.Crop,
+//                            modifier = Modifier.fillMaxSize(),
+//                            alpha = 0.5f
+//                        )
                         BricksBreakerApp()
-                    }
+//                    }
                 }
             }
         }
