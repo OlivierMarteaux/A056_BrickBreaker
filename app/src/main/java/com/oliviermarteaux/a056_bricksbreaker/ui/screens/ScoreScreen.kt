@@ -22,11 +22,17 @@ import com.oliviermarteaux.shared.composables.SharedScaffold
 import com.oliviermarteaux.shared.firebase.authentication.domain.model.GameLevel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import com.oliviermarteaux.shared.firebase.authentication.domain.model.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
+fun ScoreScreen(
+    navController: NavController,
+    gameViewModel: GameViewModel,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    topAppBarColors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+) {
 
     BackHandler() {
         gameViewModel.retrieveUserNextLevel()
@@ -61,6 +67,8 @@ fun ScoreScreen(navController: NavController, gameViewModel: GameViewModel) {
     }
     
     SharedScaffold(
+        containerColor = containerColor,
+        topAppBarColors = topAppBarColors,
         title = stringResource(selectedLevel.labelRes),
         onBackClick = {
             gameViewModel.retrieveUserNextLevel()

@@ -10,11 +10,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,11 +46,18 @@ import com.oliviermarteaux.shared.ui.UiState
 import kotlin.math.roundToInt
 
 @Composable
-fun HomeScreen(navController: NavController, gameViewModel: GameViewModel) {
+fun HomeScreen(
+    navController: NavController,
+    gameViewModel: GameViewModel,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    topAppBarColors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+    ) {
 
     SharedScaffold(
         title = stringResource(R.string.bricks_breaker),
-        onBackClick = { navController.navigate(Screen.Splash.route){popUpTo(0) { inclusive = true } } }
+        onBackClick = { navController.navigate(Screen.Splash.route){popUpTo(0) { inclusive = true } } },
+        containerColor = containerColor,
+        topAppBarColors = topAppBarColors,
     ) { innerPadding ->
 
         BackHandler() { navController.navigate(Screen.Splash.route){popUpTo(0) { inclusive = true } } }
@@ -99,12 +111,12 @@ fun HomeScreenBody(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
-            modifier = Modifier.fontScaledHeight(
-                fontSize = 12.sp,
-                scale = 10f,
-                min = 110.dp,
-                max = 170.dp
-            )
+//            modifier = Modifier.fontScaledHeight(
+//                fontSize = 12.sp,
+//                scale = 10f,
+//                min = 110.dp,
+//                max = 170.dp
+//            )
         ) {
             when (gameViewModel.userAuthState) {
 
@@ -121,7 +133,7 @@ fun HomeScreenBody(
                             errorText = "Pseudo cannot be blank or empty"
                         )
                     } else {
-                        SpacerXl()
+//                        SpacerXl()
                         TextTitleLarge(
                             stringResource(
                                 R.string.welcome_player,

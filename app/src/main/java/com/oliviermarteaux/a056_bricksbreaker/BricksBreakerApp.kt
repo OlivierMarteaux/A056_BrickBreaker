@@ -3,8 +3,11 @@ package com.oliviermarteaux.a056_bricksbreaker
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
 import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.BricksBreakerScreen
 import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.RootNavGraph
@@ -31,15 +34,17 @@ fun BricksBreakerApp(){
             SharedNavGraph.AUTH
         }
 
-    Surface {
+//    Surface {
         DismissKeyboardOnTapOutside {
             RootNavGraph(
                 navHostController = navController,
                 startDestination = startDestination,
-                logoRes = R.drawable.bricks_breaker_logo
+                logoRes = R.drawable.bricks_breaker_logo,
+                containerColor = MaterialTheme.colorScheme.background,
+                topAppBarColors = TopAppBarDefaults.topAppBarColors()
             )
         }
-    }
+//    }
 
     LogRoutes(navController)
 }

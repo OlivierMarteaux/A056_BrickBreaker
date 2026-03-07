@@ -1,9 +1,14 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui.navigation
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -22,7 +27,9 @@ import com.oliviermarteaux.shared.ui.theme.SharedShapes
 fun RootNavGraph(
     navHostController: NavHostController,
     logoRes: Int = -1,
-    startDestination: String = SharedNavGraph.AUTH
+    startDestination: String = SharedNavGraph.AUTH,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    topAppBarColors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
 ) {
     NavHost(
         navController = navHostController,
@@ -39,7 +46,9 @@ fun RootNavGraph(
                 navHostController.navigate(SharedNavGraph.APP) {
                     popUpTo(SharedNavGraph.AUTH) { inclusive = true }
                 }
-            }
+            },
+            containerColor = containerColor,
+            topAppBarColors = topAppBarColors
         )
 
         navigation(
@@ -57,7 +66,9 @@ fun RootNavGraph(
 
                 HomeScreen(
                     gameViewModel = gameViewModel,
-                    navController = navHostController
+                    navController = navHostController,
+                    containerColor = containerColor,
+                    topAppBarColors = topAppBarColors
                 )
             }
             /*_ GAME SCREEN ##############################################################################*/
@@ -86,6 +97,8 @@ fun RootNavGraph(
                 ScoreScreen(
                     gameViewModel = gameViewModel,
                     navController = navHostController,
+                    containerColor = containerColor,
+                    topAppBarColors = topAppBarColors
                 )
             }
         }

@@ -1,5 +1,8 @@
 package com.oliviermarteaux.a056_bricksbreaker.ui.screens
 
+import android.R.attr.height
+import android.R.attr.left
+import android.R.attr.top
 import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -60,12 +63,17 @@ import com.oliviermarteaux.shared.composables.SharedIconButton
 import com.oliviermarteaux.shared.firebase.authentication.domain.model.GameLevel
 import com.oliviermarteaux.shared.navigation.Screen
 import kotlinx.coroutines.isActive
+import kotlin.math.max
 import kotlin.math.sqrt
 import com.oliviermarteaux.shared.compose.R as oR
 
 
 @Composable
-fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
+fun GameScreen(
+    navController: NavController,
+    gameViewModel: GameViewModel,
+    containerColor: Color = Color.Black
+) {
 
     var gameUiState by remember { mutableStateOf(GameUiState.STARTING) }
 
@@ -80,7 +88,8 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
 
     val density = LocalDensity.current
     val paddleWidthDp = 120.dp
-    val paddleHeightDp = if (orientation == Configuration.ORIENTATION_PORTRAIT) 50.dp else 10.dp
+//    val paddleHeightDp = if (orientation == Configuration.ORIENTATION_PORTRAIT) 50.dp else 10.dp
+    val paddleHeightDp = 50.dp
     val ballRadiusDp = 10.dp
     val brickHeightDp = if (orientation == Configuration.ORIENTATION_PORTRAIT) 40.dp else 20.dp
     
@@ -164,7 +173,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         screenWidthPx = w
         screenHeightPx = h
         paddleX = (w - paddleWidthPx) / 2
-        paddleY = (h - paddleHeightPx)  - 100f
+        paddleY = (h - paddleHeightPx)
         ballPosition = Offset(paddleX + paddleWidthPx / 2, h - paddleHeightPx - 50f - ballRadiusPx)
         ballVelocity = Offset(baseSpeed * speedMultiplier, -baseSpeed * speedMultiplier)
         //bricks = (0..4).toSet()
@@ -292,7 +301,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(containerColor)
     ) {
         val wPx = constraints.maxWidth.toFloat()
         val hPx = constraints.maxHeight.toFloat()
@@ -317,6 +326,10 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         val bumperImage = ImageBitmap.imageResource(R.drawable.bumper)
         val brickImage = ImageBitmap.imageResource(R.drawable.brick)
         val paddleImage = ImageBitmap.imageResource(R.drawable.paddle)
+        val backgroundImage = ImageBitmap.imageResource(R.drawable.background)
+
+        val minPaddleDragHeight = if (orientation == Configuration.ORIENTATION_PORTRAIT)
+            screenHeightPx - 5 * paddleHeightPx else screenHeightPx - 1 * paddleHeightPx
 
         Canvas(
             modifier = Modifier
@@ -327,7 +340,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                         paddleX =
                             (paddleX + dragAmount.x).coerceIn(0f, screenWidthPx - paddleWidthPx)
                         paddleY =
-                            (paddleY + dragAmount.y).coerceIn(/*0f*/screenHeightPx - 5 * paddleHeightPx,
+                            (paddleY + dragAmount.y).coerceIn(/*0f*/minPaddleDragHeight,
                                 screenHeightPx - paddleHeightPx
                             )
                     }
@@ -342,15 +355,36 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
             val shadowOffset = 6f
 
             // Draw background gradient
-            drawRect(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF0F2027),
-                        Color(0xFF203A43),
-                        Color(0xFF2C5364)
-                    )
-                ),
-                size = size
+//            drawRect(
+//                brush = Brush.verticalGradient(
+//                    colors = listOf(
+//                        Color(0xFF0F2027),
+//                        Color(0xFF203A43),
+//                        Color(0xFF2C5364)
+//                    )
+//                ),
+//                size = size
+//            )
+            val bgImgWidth = backgroundImage.width.toFloat()
+            val bgImgHeight = backgroundImage.height.toFloat()
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+
+// Compute scale factor to fill canvas
+            val scale = max(canvasWidth / bgImgWidth, canvasHeight / bgImgHeight)
+
+// Compute source rectangle (cropped area)
+            val srcWidth = (canvasWidth / scale).toInt()
+            val srcHeight = (canvasHeight / scale).toInt()
+            val srcLeft = ((bgImgWidth - srcWidth) / 2).toInt()
+            val srcTop = ((bgImgHeight - srcHeight) / 2).toInt()
+
+            drawImage(
+                image = backgroundImage,
+                srcOffset = IntOffset(srcLeft, srcTop),
+                srcSize = IntSize(srcWidth, srcHeight),
+                dstOffset = IntOffset(0, 0),
+                dstSize = IntSize(canvasWidth.toInt(), canvasHeight.toInt())
             )
 
             //_ Draw top-down wall
@@ -395,12 +429,12 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
 
             // Draw paddle area limit line
 
-            drawLine(
-                color = Color.Red,
-                strokeWidth = 2f,
-                start = Offset(0f, screenHeightPx - 5 * paddleHeightPx),
-                end = Offset(screenWidthPx, screenHeightPx - 5 * paddleHeightPx)
-            )
+//            drawLine(
+//                color = Color.Red,
+//                strokeWidth = 2f,
+//                start = Offset(0f, screenHeightPx - 5 * paddleHeightPx),
+//                end = Offset(screenWidthPx, screenHeightPx - 5 * paddleHeightPx)
+//            )
 
             bricks.forEach { brick ->
 
