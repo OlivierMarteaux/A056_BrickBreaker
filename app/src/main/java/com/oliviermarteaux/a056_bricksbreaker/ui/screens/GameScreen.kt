@@ -2,6 +2,7 @@ package com.oliviermarteaux.a056_bricksbreaker.ui.screens
 
 import android.content.res.Configuration
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -39,17 +40,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.android.play.integrity.internal.f
 import com.oliviermarteaux.a056_bricksbreaker.R
 import com.oliviermarteaux.a056_bricksbreaker.domain.Brick
 import com.oliviermarteaux.a056_bricksbreaker.domain.Bumper
 import com.oliviermarteaux.a056_bricksbreaker.domain.Wall
 import com.oliviermarteaux.a056_bricksbreaker.ui.GameUiState
 import com.oliviermarteaux.a056_bricksbreaker.ui.GameViewModel
-import com.oliviermarteaux.a056_bricksbreaker.ui.LevelUiState
 import com.oliviermarteaux.a056_bricksbreaker.ui.navigation.BricksBreakerScreen
 import com.oliviermarteaux.shared.composables.IconSource
 import com.oliviermarteaux.shared.composables.SharedIconButton
+import com.oliviermarteaux.shared.firebase.authentication.domain.model.GameLevel
+import com.oliviermarteaux.shared.navigation.Screen
 import kotlinx.coroutines.isActive
 import kotlin.math.sqrt
 import com.oliviermarteaux.shared.compose.R as oR
@@ -57,7 +58,14 @@ import com.oliviermarteaux.shared.compose.R as oR
 
 @Composable
 fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
+
     var gameUiState by remember { mutableStateOf(GameUiState.STARTING) }
+
+    BackHandler() {
+        gameUiState = GameUiState.PAUSE
+        gameViewModel.retrieveUserNextLevel()
+        navController.popBackStack()
+    }
 
     val configuration = LocalConfiguration.current
     val orientation = configuration.orientation
@@ -87,31 +95,31 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
     var previousTime by remember { mutableStateOf(0L) }
 
     //_ walls def for next levels
-    val topDownWalls = when(gameViewModel.level) {
-        LevelUiState.LEVEL2  -> setOf(Wall(Offset(screenWidthPx/2f, screenHeightPx/2f ), Size(400f, 100f)))
-        LevelUiState.LEVEL4  -> setOf(
+    val topDownWalls = when(gameViewModel.currentLevel) {
+        GameLevel.LEVEL2  -> setOf(Wall(Offset(screenWidthPx/2f, screenHeightPx/2f ), Size(400f, 100f)))
+        GameLevel.LEVEL4  -> setOf(
             Wall(Offset(screenWidthPx/4f, screenHeightPx/3f ), Size(400f, 100f)),
             Wall(Offset(3*screenWidthPx/5f, 2* screenHeightPx/5f), Size(400f, 100f))
         )
-        LevelUiState.LEVEL10  -> setOf(
+        GameLevel.LEVEL10  -> setOf(
             Wall(Offset(screenWidthPx/2f-200f, 2*screenHeightPx/6f ), Size(400f, 200f)),
             Wall(Offset(screenWidthPx/2f-150f, 3*screenHeightPx/6f ), Size(300f, 200f)),
             Wall(Offset(screenWidthPx/2f-50f, 4*screenHeightPx/6f ), Size(100f, 200f)),
             )
         else -> emptySet()
     }
-    val bumpers = when(gameViewModel.level) {
-        LevelUiState.LEVEL3 -> setOf(Bumper(200f, Offset(screenWidthPx/2f, screenHeightPx/2f )))
-        LevelUiState.LEVEL5 -> setOf(
+    val bumpers = when(gameViewModel.currentLevel) {
+        GameLevel.LEVEL3 -> setOf(Bumper(200f, Offset(screenWidthPx/2f, screenHeightPx/2f )))
+        GameLevel.LEVEL5 -> setOf(
             Bumper(200f, Offset(screenWidthPx/4f, screenHeightPx/3f )),
             Bumper(200f, Offset(3*screenWidthPx/4f, screenHeightPx/3f )),
         )
-        LevelUiState.LEVEL6 -> setOf(
+        GameLevel.LEVEL6 -> setOf(
             Bumper(100f, Offset(screenWidthPx/4f, screenHeightPx/3f )),
             Bumper(100f, Offset(3*screenWidthPx/5f, 2*screenHeightPx/4f )),
             Bumper(100f, Offset(3*screenWidthPx/4f, 2*screenHeightPx/3f )),
         )
-        LevelUiState.LEVEL7 -> setOf(
+        GameLevel.LEVEL7 -> setOf(
                 Bumper(100f, Offset(screenWidthPx/7f-50, 2*screenHeightPx/7f )),
                 Bumper(100f, Offset(screenWidthPx/7f-50, 3*screenHeightPx/7f )),
                 Bumper(100f, Offset(screenWidthPx/7f-50, 4*screenHeightPx/7f )),
@@ -119,12 +127,12 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                 Bumper(100f, Offset(7*screenWidthPx/7f-100, 3*screenHeightPx/7f )),
                 Bumper(100f, Offset(7*screenWidthPx/7f-100, 4*screenHeightPx/7f )),
             )
-        LevelUiState.LEVEL8 -> setOf(
+        GameLevel.LEVEL8 -> setOf(
             Bumper(100f, Offset(1*screenWidthPx/7f+50, 2*screenHeightPx/4f )),
             Bumper(100f, Offset(4*screenWidthPx/7f-100, 2*screenHeightPx/4f )),
             Bumper(100f, Offset(7*screenWidthPx/7f-250, 2*screenHeightPx/4f )),
         )
-        LevelUiState.LEVEL9 -> setOf(
+        GameLevel.LEVEL9 -> setOf(
             Bumper(50f, Offset(5*screenWidthPx/10f, 1000f )),
             Bumper(50f, Offset(4*screenWidthPx/10f, 1200f )),
             Bumper(50f, Offset(6*screenWidthPx/10f, 1200f )),
@@ -157,7 +165,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                 Brick(x, y)
             }
         }.toSet()
-        gameUiState = GameUiState.PLAYING
+//        gameUiState = GameUiState.PLAYING
         previousTime = 0L
     }
     
@@ -177,8 +185,6 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     var newY = ballPosition.y + ballVelocity.y * dt
                     var vx = ballVelocity.x
                     var vy = ballVelocity.y
-
-                    Log.d("OM_TAG", " vx: $vx, vy: $vy")
                     
                     // Bounce walls
                     if (newX - ballRadiusPx < 0) {
@@ -472,7 +478,11 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         SharedIconButton(
             icon =  IconSource.VectorIcon(Icons.AutoMirrored.Filled.ArrowBack),
             tint = Color.Black,
-            onClick = {navController.popBackStack()},
+            onClick = {
+                gameUiState = GameUiState.PAUSE
+                gameViewModel.retrieveUserNextLevel()
+                navController.popBackStack()
+                      },
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.White,
                 contentColor = Color.Black
@@ -487,7 +497,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
         if (gameUiState == GameUiState.STARTING) {
             AlertDialog(
                 onDismissRequest = { },
-                title = { Text(stringResource(R.string.level, gameViewModel.level.level) + stringResource(R.string.ready_to_play)) },
+                title = { Text(stringResource( gameViewModel.currentLevel.labelRes) +". " + stringResource(R.string.ready_to_play)) },
                 text = { Text(stringResource(R.string.click_start_to_begin_the_game)) },
                 confirmButton = {
                     Button(onClick = { gameUiState = GameUiState.PLAYING }) {
@@ -495,7 +505,11 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     }
                 },
                 dismissButton = {
-                    Button(onClick = { navController.popBackStack() }) {
+                    Button(onClick = {
+                        gameUiState = GameUiState.PAUSE
+                        gameViewModel.retrieveUserNextLevel()
+                        navController.popBackStack()
+                    }) {
                         Text(stringResource(R.string.go_back))
                     }
                 }
@@ -513,6 +527,8 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                     )) },
                 confirmButton = {
                     Button(onClick = {
+                        gameUiState = GameUiState.PAUSE
+                        gameViewModel.retrieveUserNextLevel()
                         navController.popBackStack(BricksBreakerScreen.Home.route, false)
                     }) {
                         Text(stringResource(oR.string.ok))
@@ -533,7 +549,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                 confirmButton = {
                     Button(onClick = {
                         initGame(wPx, hPx)
-                        gameViewModel.nextLevel()
+                        gameViewModel.setNextLevel()
                         gameUiState = GameUiState.STARTING
                     }){
                         Text(stringResource(oR.string.ok))
@@ -541,6 +557,7 @@ fun GameScreen(navController: NavController, gameViewModel: GameViewModel) {
                 },
                 dismissButton = {
                     Button(onClick = {
+                        gameViewModel.retrieveUserNextLevel()
                         navController.popBackStack(BricksBreakerScreen.Home.route, false)
                     }) {
                         Text("Back to home")

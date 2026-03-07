@@ -18,5 +18,6 @@
     <string name="you_win">You Win!</string>
     <string name="congratulations_time_s">Congratulations! Time: %1$ds. Continue to next level?</string>
     <string name="score_line_s">--</string>
-    <string name="level">"Level %1$d. "</string>
+    <string name="all_levels">All levels</string>
+    <string name="continue_game">Continue game</string>
 </resources>

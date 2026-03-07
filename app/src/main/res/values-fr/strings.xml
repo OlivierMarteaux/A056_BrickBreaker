@@ -18,5 +18,5 @@
     <string name="you_win">Gagné!</string>
     <string name="congratulations_time_s">Félicitations! Temps: %1$ds. Continuer au niveau suivant?</string>
     <string name="score_line_s">--</string>
-    <string name="level">"Niveau %1$d. "</string>
+    <string name="continue_game">Reprendre la partie</string>
 </resources>
